@@ -1,0 +1,35 @@
+# Clear up some information about this terminal
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export TERM=xterm-256color
+
+# Path variables
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
+export MANPATH="/usr/local/man:$MANPATH"
+export REPOS="$HOME/repos/"
+
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+    export EDITOR='emacsclient -t'
+else
+    export EDITOR='emacsclient -c'
+fi
+
+# Compilation flags
+export ARCHFLAGS="-arch x86_64"
+
+# don't highlight word after cursor
+export AUTOSUGGESTION_HIGHLIGHT_CURSOR=0
+# complete entire suggestion with right arrow
+export AUTOSUGGESTION_ACCEPT_RIGHT_ARROW=1
+
+# Gopath settings
+export GOPATH=$HOME/golang
+export GOROOT=/usr/local/opt/go/libexec
+export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
+
+# Activate pyenv shim magic
+eval "$(pyenv init -)"
+
+# Activate rbenv shim magic
+eval "$(rbenv init -)"

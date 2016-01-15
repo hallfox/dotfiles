@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+"""A simple script that sets up all the symlinks for the dotfiles."""
+from __future__ import print_function
+
+import re
+import os
+import os.path as path
+
+home = os.environ["HOME"]
+sym_regex = re.compile(r"(\w+).symlink")
+bootstrap_path = path.dirname(path.abspath(__file__))
+dotfiles = {dot: sym_regex.sub(r".\1", dot)
+            for dot in os.listdir(bootstrap_path) if sym_regex.search(dot)}
+
+assert len(dotfiles) > 0
+
+go_on = input(
+    "Found {} file(s) to symlink. Do you wish to continue? ([y]/n): ".format(
+        len(dotfiles)))
+
+if go_on.lower() == "n":
+    print("Try again next time, slinger.")
+    exit()
+
+print("Symlinking...")
+
+for sym, fname in dotfiles.items():
+    src = path.abspath(sym)
+    dst = path.abspath(path.join(home, fname))
+
+    if path.lexists(dst):
+        go_on = input(
+            "Warning! File {} already exists. Do you want to overwrite it? (y/[n]): ".format(
+                dst))
+        if go_on.lower() == "y":
+            os.unlink(dst)
+        else:
+            continue
+
+    os.symlink(src, dst)
+    print("{} -> {}".format(src, dst))
+
+print("Come again stranger.")
