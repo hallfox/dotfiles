@@ -215,6 +215,7 @@ values."
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
+  (setq-default git-magit-status-fullscreen t)
   )
 
 (defun dotspacemacs/user-config ()
@@ -250,7 +251,7 @@ layers configuration. You are free to put any user code."
   ;; Web mode go to previous element
   (spacemacs/set-leader-keys-for-major-mode 'web-mode "gS" 'web-mode-element-sibling-previous)
 
-  ;; Magit default repos
+  ;; Magit
   (setq magit-repository-directories '("~/repos/"))
 )
 
