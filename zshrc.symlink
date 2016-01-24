@@ -18,16 +18,9 @@ antigen bundle gitignore
 
 # Syntax highlighting bundle.
 antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle tarruda/zsh-autosuggestions
 
 # Load the theme.
 antigen theme https://gist.github.com/hallfox/ef3323aa675e7f4b6bdf westwood
 
 # Tell antigen that you're done.
 antigen apply
-
-# Enable autosuggestions automatically.
-zle-line-init() {
-    zle autosuggest-start
-}
-zle -N zle-line-init
