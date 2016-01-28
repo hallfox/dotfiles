@@ -28,33 +28,36 @@ values."
      (c-c++ :variables
             c-c++-enable-clang-support t)
      clojure
-     ;; (colors :variables
-     ;;         colors-enable-rainbow-identifiers t)
+     (colors :variables
+             colors-enable-rainbow-identifiers t)
+     dash
      emacs-lisp
      ;; emoji
      ;; erc
      evil-commentary
      git
      github
-     go
+     ;; go
      gtags
      html
      javascript
+     lua
      markdown
      org
      osx
-     (python :variables
-             python-enable-yapf-format-on-save t)
+     python
+     rust
      ;; scheme
-     ;; search-engine
+     search-engine
      (shell :variables
             shell-default-height 30
-            shell-default-position 'bottom
-            shell-default-shell 'ansi-term
+            shell-default-position 'full
+            shell-default-shell 'multiterm
             shell-default-term-shell "/bin/zsh")
      spacemacs-layouts
      ; spell-checking
      syntax-checking
+     themes-megapack
      ;; version-control
      ;; vim-powerline
      ;; xkcd
@@ -101,7 +104,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
+   dotspacemacs-themes '(monochrome
+                         spacemacs-dark
                          solarized-dark
                          spacemacs-light
                          solarized-light
@@ -112,7 +116,7 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro"
+   dotspacemacs-default-font '("Hack"
                                :size 13
                                :weight normal
                                :width normal
@@ -169,7 +173,7 @@ values."
    dotspacemacs-loading-progress-bar t
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup t
+   dotspacemacs-fullscreen-at-startup nil
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
    dotspacemacs-fullscreen-use-non-native nil
@@ -186,7 +190,7 @@ values."
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
    dotspacemacs-inactive-transparency 90
    ;; If non nil unicode symbols are displayed in the mode line. (default t)
-   dotspacemacs-mode-line-unicode-symbols nil
+   dotspacemacs-mode-line-unicode-symbols t
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters the
    ;; point when it reaches the top or bottom of the screen. (default t)
@@ -215,7 +219,12 @@ values."
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
-  (setq-default git-magit-status-fullscreen t)
+  (setq-default
+   git-magit-status-fullscreen t
+
+   ;; Rust autocompletion
+   rust-enable-racer t
+   )
   )
 
 (defun dotspacemacs/user-config ()
@@ -234,13 +243,33 @@ layers configuration. You are free to put any user code."
   (setq-default evil-escape-key-sequence "fj")
   (setq-default evil-escape-delay 0.5)
 
+  (spacemacs/toggle-highlight-current-line-globally-off)
+  (spacemacs/toggle-fringe-off)
+
   ;; Projectile run project
   (spacemacs/set-leader-keys "pu" 'projectile-run-project)
 
-  ;; Org configuration
-  (setq org-directory "~/Dropbox/notes/")
-  (setq org-agenda-files '("~/Dropbox/notes/"))
-  (setq org-default-notes-file (concat org-directory "/notes.org"))
+  ;; General configuration settings
+  (setq-default
+
+   ;; Org configuration
+   org-directory "~/Dropbox/notes/"
+   org-agenda-files '("~/Dropbox/notes/")
+   org-default-notes-file (concat org-directory "/notes.org")
+
+   ;; Magit
+   magit-repository-directories '("~/repos/")
+
+   ;; Multiterm use zsh
+   multi-term-program "/bin/zsh"
+   evil-search-highlight-persist nil
+
+   ;; Smartparens
+   sp-highlight-pair-overlay nil
+   sp-highlight-wrap-overlay nil
+   sp-highlight-wrap-tag-overlay nil
+
+   )
 
   ;; Always be in C++11 mode
   (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++11")))
@@ -251,8 +280,9 @@ layers configuration. You are free to put any user code."
   ;; Web mode go to previous element
   (spacemacs/set-leader-keys-for-major-mode 'web-mode "gS" 'web-mode-element-sibling-previous)
 
-  ;; Magit
-  (setq magit-repository-directories '("~/repos/"))
+  ;; YCMD
+  (set-variable 'ycmd-server-command '("/usr/local/bin/python" "~/repos/ycmd/ycmd/"))
+
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
