@@ -1,0 +1,233 @@
+" Use Vim settings, rather then Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
+set nocompatible
+
+" ================ General Config ====================
+
+set showcmd                     "Show incomplete cmds down the bottom
+set showmode                    "Show current mode down the bottom
+set visualbell                  "No sounds
+set autoread                    "Reload files changed outside vim
+
+
+" This makes vim act like all other editors, buffers can
+" exist in the background without being in a window.
+" http://items.sjbach.com/319/configuring-vim-right
+set hidden
+
+"turn on syntax highlighting
+syntax on
+
+" Reload vimrc on save
+autocmd! BufWritePost .vimrc source %
+
+" Change leader to a comma because the backslash is too far away
+" That means all \x commands turn into ,x
+" The mapleader has to be set before vundle starts loading all 
+" the plugins.
+let mapleader="\<Space>"
+
+" ================ Turn Off Swap Files ==============
+
+set noswapfile
+set nobackup
+set nowb
+
+" ================ Persistent Undo ==================
+" Keep undo history across sessions, by storing in file.
+" Only works all the time.
+if has('persistent_undo') && !isdirectory(expand('~').'/.vim/backups')
+  silent !mkdir ~/.vim/backups > /dev/null 2>&1
+  set undodir=~/.vim/backups
+  set undofile
+endif
+
+" ================ Indentation ======================
+
+set autoindent
+set smartindent
+set smarttab
+set shiftwidth=2
+set softtabstop=2
+set tabstop=2
+set expandtab
+
+" Auto indent pasted text
+nnoremap p p=`]<C-o>
+nnoremap P P=`]<C-o>
+
+" Display tabs and trailing spaces visually
+set list listchars=tab:\ \ ,trail:·
+
+set nowrap       "Don't wrap lines
+set linebreak    "Wrap lines at convenient points
+
+" ================ Folds ============================
+
+set foldmethod=indent   "fold based on indent
+set foldnestmax=3       "deepest fold is 3 levels
+set nofoldenable        "dont fold by default
+
+" ================ Completion =======================
+
+set wildmode=list:longest
+set wildmenu                "enable ctrl-n and ctrl-p to scroll thru matches
+set wildignore=*.o,*.obj,*~ "stuff to ignore when tab completing
+set wildignore+=*vim/backups*
+set wildignore+=tmp/**
+set wildignore+=*.png,*.jpg,*.gif
+
+"
+" ================ Scrolling ========================
+
+set scrolloff=8         "Start scrolling when we're 8 lines away from margins
+set sidescrolloff=15
+set sidescroll=1
+
+" ================ Search ===========================
+
+set incsearch       " Find the next match as we type the search
+set hlsearch        " Highlight searches by default
+set ignorecase      " Ignore case when searching...
+set smartcase       " ...unless we type a capital
+
+" ================ gvim Settings ====================
+
+if has('gui_running')
+  set guioptions-=m " get rid of annoying graphical elements
+  set guioptions-=T
+  set guioptions-=r
+  set guioptions-=L
+  set guifont=Inconsolata\ for\ Powerline:h14
+end
+
+" ================ NeoBundle Plugins ================
+
+set runtimepath^=~/.vim/bundle/neobundle.vim/
+
+call neobundle#begin(expand('~/.vim/bundle/'))
+
+" Let NeoBundle manage NeoBundle
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+" Shell and async extensions
+NeoBundle 'Shougo/vimproc.vim', {
+      \ 'build' : {
+      \   'windows' : 'tools\\update-dll-mingw',
+      \   'cygwin' : 'make -f make_cygwin.mak',
+      \   'mac' : 'make',
+      \   'linux' : 'make',
+      \   'unix' : 'gmake',
+      \ },
+      \ }
+NeoBundle 'Shougo/vimshell.vim'
+
+" Etc
+" NeoBundle 'ctrlpvim/ctrlp.vim'
+NeoBundle 'scrooloose/syntastic'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'easymotion/vim-easymotion'
+NeoBundle 'bling/vim-bufferline'
+NeoBundle 'majutsushi/tagbar'
+NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'wakatime/vim-wakatime'
+
+" Unite.vim
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/neomru.vim'
+
+" Git related extensions
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'mattn/gist-vim', {'depends': 'mattn/webapi-vim'}
+
+" Colorscheme plugins
+NeoBundle 'flazz/vim-colorschemes'
+NeoBundle 'atelierbram/vim-colors_duotones'
+
+" UltiSnips
+NeoBundle 'SirVer/ultisnips'
+NeoBundle 'honza/vim-snippets'
+
+" You Complete Me
+NeoBundle 'Valloric/YouCompleteMe'
+
+" Vim Airline
+NeoBundle 'vim-airline/vim-airline'
+NeoBundle 'vim-airline/vim-airline-themes'
+
+call neobundle#end()
+
+filetype plugin indent on
+
+NeoBundleCheck
+
+" ============== Plugin settings =================
+
+" Bufferline
+let g:bufferline_echo = 0 " Turn off bufferline in cmd bar
+
+" Airline fonts
+set laststatus=2
+let g:airline_powerline_fonts = 1
+
+" Themeing
+set background=dark
+colorscheme base16-duotone-dark
+
+" You Complete Me
+let g:ycm_show_diagnostics_ui = 0
+
+" Ultisnips
+let g:UltiSnipsExpandTrigger = "<C-\\>"
+
+" Unite.vim
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+
+" ============= Key mappings =====================
+
+" Leader commands
+noremap <leader><Tab> <C-^> " Go to last buffer
+nnoremap <leader>sc :noh<CR>
+
+" Fugitive bindings
+nnoremap <leader>gs :Gstatus<CR>
+nnoremap <leader>gw :Gwrite<CR>
+nnoremap <leader>gc :Gcommit<CR>
+nnoremap <leader>gp :Gpush<CR>
+nnoremap <leader>gf :Gpull<CR>
+nnoremap <leader>gd :Gdiff<CR>
+
+" Window commands
+nnoremap <leader>wc <C-w>c
+nnoremap <leader>ws <C-w>s
+nnoremap <leader>wv <C-w>v
+" Window jumping
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" Buffer commands
+nnoremap <leader>bl :bnext<CR>
+nnoremap <leader>bh :bprevious<CR>
+nnoremap <leader>bd :bdelete<CR>
+
+" Unite.vim
+nnoremap <leader>ff :Unite -start-insert file/async<CR>
+nnoremap <leader>bb :Unite buffer<CR>
+nnoremap <leader>fr :Unite -start-insert neomru/file<CR>
+
+" UltiSnips
+nnoremap <leader>ul <C-Tab>
+
+" System clipboard
+vnoremap <leader>xy "*y
+nnoremap <leader>xy "*yy
+nnoremap <leader>xp "*p
+nnoremap <leader>xP "*P
+
+" Quit
+nnoremap <leader>qq :qa<CR>
+vnoremap <leader>qq :qa<CR>
+nnoremap <leader>qQ :qa!<CR>
+vnoremap <leader>qQ :qa!<CR>
