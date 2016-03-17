@@ -123,7 +123,7 @@ NeoBundle 'Shougo/vimproc.vim', {
 NeoBundle 'Shougo/vimshell.vim'
 
 " Etc
-" NeoBundle 'ctrlpvim/ctrlp.vim'
+NeoBundle 'ctrlpvim/ctrlp.vim'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'easymotion/vim-easymotion'
@@ -131,6 +131,7 @@ NeoBundle 'bling/vim-bufferline'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'wakatime/vim-wakatime'
+NeoBundle 'atelierbram/vim-colors_duotones'
 
 " Unite.vim
 NeoBundle 'Shougo/unite.vim'
@@ -172,7 +173,7 @@ let g:airline_powerline_fonts = 1
 
 " Themeing
 set background=dark
-colorscheme base16-duotone-dark
+colorscheme duotone-dark
 
 " You Complete Me
 let g:ycm_show_diagnostics_ui = 0

@@ -26,10 +26,3 @@ export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
 # Rust binaries
 export PATH=$PATH:$HOME/.cargo/bin
 export RUST_SRC_PATH=$REPOS/rust/src
-
-# Activate pyenv shim magic
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-
-# Activate rbenv shim magic
-eval "$(rbenv init -)"
