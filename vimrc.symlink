@@ -8,6 +8,7 @@ set showcmd                     "Show incomplete cmds down the bottom
 set showmode                    "Show current mode down the bottom
 set visualbell                  "No sounds
 set autoread                    "Reload files changed outside vim
+set autochdir
 
 
 " This makes vim act like all other editors, buffers can
@@ -135,6 +136,11 @@ NeoBundle 'atelierbram/vim-colors_duotones'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'fatih/vim-go'
 NeoBundle 'raimondi/delimitmate'
+NeoBundle 'Glench/Vim-Jinja2-Syntax'
+NeoBundle 'mattn/emmet-vim'
+NeoBundle 'klen/python-mode'
+NeoBundle 'tpope/vim-fireplace'
+NeoBundle 'wting/rust.vim'
 
 " Unite.vim
 NeoBundle 'Shougo/unite.vim'
@@ -185,7 +191,7 @@ let g:ycm_show_diagnostics_ui = 0
 let g:UltiSnipsExpandTrigger = "<C-\\>"
 
 " Unite.vim
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
+" call unite#filters#matcher_default#use(['matcher_fuzzy'])
 
 " ============= Key mappings =====================
 
@@ -193,6 +199,7 @@ call unite#filters#matcher_default#use(['matcher_fuzzy'])
 noremap <leader><Tab> <C-^> " Go to last buffer
 nnoremap <leader>sc :noh<CR>
 nnoremap <leader>tt :TagbarToggle<CR>
+nnoremap <leader>fv :e $MYVIMRC<CR>
 
 " Fugitive bindings
 nnoremap <leader>gs :Gstatus<CR>

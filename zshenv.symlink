@@ -26,3 +26,10 @@ export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
 # Rust binaries
 export PATH=$PATH:$HOME/.cargo/bin
 export RUST_SRC_PATH=$REPOS/rust/src
+export PATH=$PATH:$HOME/.cargo/bin
+
+# Latex goodies
+export PATH=$PATH:/usr/local/texlive/2015/bin/x86_64-darwin/
+
+# Haskell package path
+export PATH=$PATH:$HOME/.local/bin
