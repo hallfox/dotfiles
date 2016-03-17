@@ -8,6 +8,7 @@ set showcmd                     "Show incomplete cmds down the bottom
 set showmode                    "Show current mode down the bottom
 set visualbell                  "No sounds
 set autoread                    "Reload files changed outside vim
+set autochdir
 
 
 " This makes vim act like all other editors, buffers can
@@ -132,6 +133,11 @@ NeoBundle 'majutsushi/tagbar'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'wakatime/vim-wakatime'
 NeoBundle 'atelierbram/vim-colors_duotones'
+NeoBundle 'Glench/Vim-Jinja2-Syntax'
+NeoBundle 'mattn/emmet-vim'
+NeoBundle 'klen/python-mode'
+NeoBundle 'tpope/vim-fireplace'
+NeoBundle 'wting/rust.vim'
 
 " Unite.vim
 NeoBundle 'Shougo/unite.vim'
@@ -182,13 +188,14 @@ let g:ycm_show_diagnostics_ui = 0
 let g:UltiSnipsExpandTrigger = "<C-\\>"
 
 " Unite.vim
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
+" call unite#filters#matcher_default#use(['matcher_fuzzy'])
 
 " ============= Key mappings =====================
 
 " Leader commands
 noremap <leader><Tab> <C-^> " Go to last buffer
 nnoremap <leader>sc :noh<CR>
+nnoremap <leader>fv :e $MYVIMRC<CR>
 
 " Fugitive bindings
 nnoremap <leader>gs :Gstatus<CR>
@@ -214,9 +221,10 @@ nnoremap <leader>bh :bprevious<CR>
 nnoremap <leader>bd :bdelete<CR>
 
 " Unite.vim
-nnoremap <leader>ff :Unite -start-insert file/async<CR>
-nnoremap <leader>bb :Unite buffer<CR>
-nnoremap <leader>fr :Unite -start-insert neomru/file<CR>
+"nnoremap <leader>ff :Unite -start-insert file/async<CR>
+"nnoremap <leader>bb :Unite -start-insert buffer<CR>
+"nnoremap <leader>fr :Unite -start-insert neomru/file<CR>
+"nnoremap <leader>pf :UniteWithProjectDir -start-insert file/async<CR>
 
 " UltiSnips
 nnoremap <leader>ul <C-Tab>
