@@ -8,7 +8,6 @@ set showcmd                     "Show incomplete cmds down the bottom
 set showmode                    "Show current mode down the bottom
 set visualbell                  "No sounds
 set autoread                    "Reload files changed outside vim
-set autochdir
 
 
 " This makes vim act like all other editors, buffers can
@@ -141,6 +140,7 @@ NeoBundle 'mattn/emmet-vim'
 NeoBundle 'klen/python-mode'
 NeoBundle 'tpope/vim-fireplace'
 NeoBundle 'wting/rust.vim'
+NeoBundle 'rking/ag.vim'
 
 " Unite.vim
 NeoBundle 'Shougo/unite.vim'
@@ -193,11 +193,15 @@ let g:UltiSnipsExpandTrigger = "<C-\\>"
 " Unite.vim
 " call unite#filters#matcher_default#use(['matcher_fuzzy'])
 
+" CtrlP
+let g:ctrlp_custom_ignore = {
+      \ 'dir': '\v(venv|__pycache__)',
+      \ }
+
 " ============= Key mappings =====================
 
 " Leader commands
 noremap <leader><Tab> <C-^> " Go to last buffer
-nnoremap <leader>sc :noh<CR>
 nnoremap <leader>tt :TagbarToggle<CR>
 nnoremap <leader>fv :e $MYVIMRC<CR>
 
@@ -220,6 +224,9 @@ nnoremap <leader>wk <C-w>k
 nnoremap <leader>wl <C-w>l
 
 " Buffer commands
+nnoremap <leader>bb :CtrlPBuffer<CR>
+nnoremap <leader>bj :bn<CR>
+nnoremap <leader>bk :bp<CR>
 nnoremap <leader>bl :bnext<CR>
 nnoremap <leader>bh :bprevious<CR>
 nnoremap <leader>bd :bdelete<CR>
@@ -229,13 +236,6 @@ nnoremap <leader>ff :CtrlP<CR>
 nnoremap <leader>fr :CtrlPMRU<CR>
 nnoremap <leader>fs :w<CR>
 nnoremap <leader>fu :GundoToggle<CR>
-
-" Buffer commands
-nnoremap <leader>bb :CtrlPBuffer<CR>
-nnoremap <leader>bl :bn<CR>
-nnoremap <leader>bh :bp<CR>
-nnoremap <leader>bj :bn<CR>
-nnoremap <leader>bk :bp<CR>
 
 " UltiSnips
 nnoremap <leader>ul <C-Tab>
@@ -251,3 +251,9 @@ nnoremap <leader>qq :qa<CR>
 vnoremap <leader>qq :qa<CR>
 nnoremap <leader>qQ :qa!<CR>
 vnoremap <leader>qQ :qa!<CR>
+
+" Searching
+nnoremap <leader>ss :Ag 
+nnoremap <leader>sc :noh<CR>
+nnoremap <leader>sb :AgBuffer 
+nnoremap <leader>sf :AgFile 
