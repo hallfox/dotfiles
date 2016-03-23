@@ -26,10 +26,10 @@ export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
 # Rust binaries
 export PATH=$PATH:$HOME/.cargo/bin
 export RUST_SRC_PATH=$REPOS/rust/src
+export PATH=$PATH:$HOME/.cargo/bin
 
-# Activate pyenv shim magic
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+# Latex goodies
+export PATH=$PATH:/usr/local/texlive/2015/bin/x86_64-darwin/
 
-# Activate rbenv shim magic
-eval "$(rbenv init -)"
+# Haskell package path
+export PATH=$PATH:$HOME/.local/bin

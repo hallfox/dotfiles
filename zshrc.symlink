@@ -24,3 +24,12 @@ antigen theme https://gist.github.com/hallfox/ef3323aa675e7f4b6bdf westwood
 
 # Tell antigen that you're done.
 antigen apply
+
+alias leakcheck="iprofiler -leaks -d $HOME/.leakchecks"
+
+# Activate pyenv shim magic
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
+
+# Activate rbenv shim magic
+# eval "$(rbenv init -)"
