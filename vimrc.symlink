@@ -254,6 +254,8 @@ nnoremap <leader>wv <C-w>v
 nnoremap <leader>w= <C-w>=
 " Close preview window
 nnoremap ^G :pc<CR>
+" Close quickfix window
+nnoremap <leader>wq :ccl<CR>
 " Window jumping
 nnoremap <leader>wh <C-w>h
 nnoremap <leader>wj <C-w>j
