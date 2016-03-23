@@ -165,6 +165,8 @@ NeoBundle 'jceb/vim-orgmode', {'depends':
       \  'mattn/calendar-vim',
       \  'vim-scripts/SyntaxRange'] }
 
+NeoBundle 'rking/ag.vim'
+
 " Unite.vim
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neomru.vim'
@@ -224,11 +226,15 @@ let g:syntastic_cpp_compiler_options = "-std=c++11"
 let g:racer_cmd = "$HOME/.cargo/bin/racer"
 let $RUST_SRC_PATH = "$HOME/repos/rust/src"
 
+" CtrlP
+let g:ctrlp_custom_ignore = {
+      \ 'dir': '\v(venv|__pycache__)',
+      \ }
+
 " ============= Key mappings =====================
 
 " Leader commands
 noremap <leader><Tab> <C-^> " Go to last buffer
-nnoremap <leader>sc :noh<CR>
 nnoremap <leader>tt :TagbarToggle<CR>
 nnoremap <leader>fv :e $MYVIMRC<CR>
 
@@ -254,6 +260,9 @@ nnoremap <leader>wk <C-w>k
 nnoremap <leader>wl <C-w>l
 
 " Buffer commands
+nnoremap <leader>bb :CtrlPBuffer<CR>
+nnoremap <leader>bj :bn<CR>
+nnoremap <leader>bk :bp<CR>
 nnoremap <leader>bl :bnext<CR>
 nnoremap <leader>bh :bprevious<CR>
 nnoremap <leader>bd :bdelete<CR>
@@ -296,3 +305,9 @@ nnoremap <leader>ee :SyntasticCheck<CR>
 
 " VimShell
 nnoremap <leader>' :VimShellPop<CR>
+
+" Searching
+nnoremap <leader>ss :Ag 
+nnoremap <leader>sc :noh<CR>
+nnoremap <leader>sb :AgBuffer 
+nnoremap <leader>sf :AgFile 
