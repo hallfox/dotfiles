@@ -10,11 +10,11 @@ set visualbell                  "No sounds
 set autoread                    "Reload files changed outside vim
 set nonumber
 
-
 " This makes vim act like all other editors, buffers can
 " exist in the background without being in a window.
 " http://items.sjbach.com/319/configuring-vim-right
 set hidden
+set backspace=2
 
 "turn on syntax highlighting
 syntax on
@@ -134,13 +134,38 @@ NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'wakatime/vim-wakatime'
 NeoBundle 'atelierbram/vim-colors_duotones'
 NeoBundle 'sjl/gundo.vim'
-NeoBundle 'fatih/vim-go'
 NeoBundle 'raimondi/delimitmate'
-NeoBundle 'Glench/Vim-Jinja2-Syntax'
-NeoBundle 'mattn/emmet-vim'
+NeoBundle 'Shougo/junkfile.vim'
+NeoBundle 'chrisbra/NrrwRgn'
+NeoBundle 'tpope/vim-dispatch'
+
+" Python
 NeoBundle 'klen/python-mode'
+NeoBundle 'Glench/Vim-Jinja2-Syntax'
+
+" Rust
+NeoBundle 'rust-lang/rust.vim'
+NeoBundle 'racer-rust/vim-racer'
+NeoBundle 'timonv/vim-cargo'
+
+" Golang
+NeoBundle 'fatih/vim-go'
+
+" Clojure
 NeoBundle 'tpope/vim-fireplace'
-NeoBundle 'wting/rust.vim'
+
+" Web
+NeoBundle 'mattn/emmet-vim'
+
+" Org mode
+NeoBundle 'jceb/vim-orgmode', {'depends':
+      \ ['vim-scripts/utl.vim',
+      \  'tpope/vim-repeat',
+      \  'tpope/vim-speeddating',
+      \  'chrisbra/NrrwRgn',
+      \  'mattn/calendar-vim',
+      \  'vim-scripts/SyntaxRange'] }
+
 NeoBundle 'rking/ag.vim'
 
 " Unite.vim
@@ -183,7 +208,7 @@ let g:airline_powerline_fonts = 1
 
 " Themeing
 set background=dark
-colorscheme duotone-dark
+colorscheme twilight256
 
 " You Complete Me
 let g:ycm_show_diagnostics_ui = 0
@@ -193,6 +218,14 @@ let g:UltiSnipsExpandTrigger = "<C-\\>"
 
 " Unite.vim
 " call unite#filters#matcher_default#use(['matcher_fuzzy'])
+
+" Syntastic
+let g:syntastic_cpp_compiler = "clang++"
+let g:syntastic_cpp_compiler_options = "-std=c++11"
+
+" Racer configs
+let g:racer_cmd = "$HOME/.cargo/bin/racer"
+let $RUST_SRC_PATH = "$HOME/repos/rust/src"
 
 " CtrlP
 let g:ctrlp_custom_ignore = {
@@ -218,6 +251,9 @@ nnoremap <leader>gd :Gdiff<CR>
 nnoremap <leader>wc <C-w>c
 nnoremap <leader>ws <C-w>s
 nnoremap <leader>wv <C-w>v
+nnoremap <leader>w= <C-w>=
+" Close preview window
+nnoremap ^G :pc<CR>
 " Window jumping
 nnoremap <leader>wh <C-w>h
 nnoremap <leader>wj <C-w>j
@@ -237,6 +273,17 @@ nnoremap <leader>ff :CtrlP<CR>
 nnoremap <leader>fr :CtrlPMRU<CR>
 nnoremap <leader>fs :w<CR>
 nnoremap <leader>fu :GundoToggle<CR>
+nnoremap <leader>fj :e .<CR>
+nnoremap <leader>fJ :JunkfileOpen<CR>
+
+" Buffer commands
+nnoremap <leader>bb :CtrlPBuffer<CR>
+nnoremap <leader>k :bn<CR>
+nnoremap <leader>j :bp<CR>
+
+" Tab commands
+nnoremap <leader>l :tabn<CR>
+nnoremap <leader>h :tabp<CR>
 
 " UltiSnips
 nnoremap <leader>ul <C-Tab>
@@ -252,6 +299,13 @@ nnoremap <leader>qq :qa<CR>
 vnoremap <leader>qq :qa<CR>
 nnoremap <leader>qQ :qa!<CR>
 vnoremap <leader>qQ :qa!<CR>
+
+" Syntastic
+nnoremap <leader>ts :SyntasticToggleMode<CR>
+nnoremap <leader>ee :SyntasticCheck<CR>
+
+" VimShell
+nnoremap <leader>' :VimShellPop<CR>
 
 " Searching
 nnoremap <leader>ss :Ag 
