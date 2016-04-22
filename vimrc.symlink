@@ -9,6 +9,7 @@ set showmode                    "Show current mode down the bottom
 set visualbell                  "No sounds
 set autoread                    "Reload files changed outside vim
 set nonumber
+set encoding=utf8
 
 " This makes vim act like all other editors, buffers can
 " exist in the background without being in a window.
@@ -92,6 +93,22 @@ set hlsearch        " Highlight searches by default
 set ignorecase      " Ignore case when searching...
 set smartcase       " ...unless we type a capital
 
+" ================ Functions ========================
+
+if !exists('*s:setupWrapping')
+  function s:setupWrapping()
+    set wrap
+    set wm=2
+    set textwidth=79
+  endfunction
+endif
+
+"" txt
+augroup vimrc-wrapping
+  autocmd!
+  autocmd BufRead,BufNewFile *.txt call s:setupWrapping()
+augroup END
+
 " ================ gvim Settings ====================
 
 if has('gui_running')
@@ -130,18 +147,28 @@ NeoBundle 'tpope/vim-surround'
 NeoBundle 'easymotion/vim-easymotion'
 NeoBundle 'bling/vim-bufferline'
 NeoBundle 'majutsushi/tagbar'
+NeoBundle 'moll/vim-bbye'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'wakatime/vim-wakatime'
-NeoBundle 'atelierbram/vim-colors_duotones'
 NeoBundle 'sjl/gundo.vim'
-NeoBundle 'raimondi/delimitmate'
 NeoBundle 'Shougo/junkfile.vim'
 NeoBundle 'chrisbra/NrrwRgn'
 NeoBundle 'tpope/vim-dispatch'
+NeoBundle 'christoomey/vim-tmux-navigator'
+NeoBundle 'edkolev/tmuxline.vim'
+NeoBundle 'xolox/vim-session', {'depends': ['xolox/vim-misc'] }
+NeoBundle 'jiangmiao/auto-pairs'
+NeoBundle 'junegunn/vim-easy-align'
+NeoBundle 'tpope/vim-eunuch'
+NeoBundle 'vim-scripts/YankRing.vim'
+NeoBundle 'ryanoasis/vim-devicons'
+NeoBundle 'mhinz/vim-startify'
+NeoBundle 'wellle/targets.vim'
 
 " Python
 NeoBundle 'klen/python-mode'
 NeoBundle 'Glench/Vim-Jinja2-Syntax'
+NeoBundle 'jmcantrell/vim-virtualenv'
 
 " Rust
 NeoBundle 'rust-lang/rust.vim'
@@ -153,6 +180,18 @@ NeoBundle 'fatih/vim-go'
 
 " Clojure
 NeoBundle 'tpope/vim-fireplace'
+NeoBundle 'tpope/vim-salve'
+
+" Haskell
+NeoBundle 'neovimhaskell/haskell-vim'
+NeoBundle 'enomsg/vim-haskellConcealPlus'
+NeoBundle 'eagletmt/ghcmod-vim'
+NeoBundle 'eagletmt/neco-ghc'
+NeoBundle 'Twinside/vim-hoogle'
+NeoBundle 'mpickering/hlint-refactor-vim'
+
+" Node
+NeoBundle 'pangloss/vim-javascript'
 
 " Web
 NeoBundle 'mattn/emmet-vim'
@@ -178,18 +217,26 @@ NeoBundle 'mattn/gist-vim', {'depends': 'mattn/webapi-vim'}
 
 " Colorscheme plugins
 NeoBundle 'flazz/vim-colorschemes'
-NeoBundle 'atelierbram/vim-colors_duotones'
+"NeoBundle 'atelierbram/vim-colors_duotones'
 
-" UltiSnips
-NeoBundle 'SirVer/ultisnips'
-NeoBundle 'honza/vim-snippets'
+if has('nvim')
+  NeoBundle 'Shougo/deoplete.nvim'
+  NeoBundle 'Shougo/neosnippet.vim'
+else
+  " UltiSnips
+  NeoBundle 'SirVer/ultisnips'
+  NeoBundle 'honza/vim-snippets'
 
-" You Complete Me
-NeoBundle 'Valloric/YouCompleteMe'
+  " You Complete Me
+  NeoBundle 'Valloric/YouCompleteMe'
+endif
 
 " Vim Airline
 NeoBundle 'vim-airline/vim-airline'
 NeoBundle 'vim-airline/vim-airline-themes'
+
+" Devicons loads last to be compatible with other plugins
+NeoBundle 'ryanoasis/vim-devicons'
 
 call neobundle#end()
 
@@ -210,11 +257,27 @@ let g:airline_powerline_fonts = 1
 set background=dark
 colorscheme twilight256
 
+if has('gui_running')
+  colorscheme twilight
+end
+
 " You Complete Me
 let g:ycm_show_diagnostics_ui = 0
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_path_to_python_interpreter = "/usr/local/bin/python2"
+let g:ycm_global_ycm_extra_conf = "~/.ycm_extra_conf.py"
+let g:ycm_extra_conf_globlist = ["~/.ycm_extra_conf.py"]
+
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  "return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+  " For no inserting <CR> key.
+  return pumvisible() ? "\<C-y>" : "\<CR>"
+endfunction
 
 " Ultisnips
-let g:UltiSnipsExpandTrigger = "<C-\\>"
+let g:UltiSnipsExpandTrigger = "<C-\Space>"
 
 " Unite.vim
 " call unite#filters#matcher_default#use(['matcher_fuzzy'])
@@ -222,6 +285,11 @@ let g:UltiSnipsExpandTrigger = "<C-\\>"
 " Syntastic
 let g:syntastic_cpp_compiler = "clang++"
 let g:syntastic_cpp_compiler_options = "-std=c++11"
+let g:syntastic_check_on_open= 1
+let g:syntastic_mode_map = {
+      \ "mode": "active",
+      \ "active_filetypes": [],
+      \ "passive_filetypes": ["python"] }
 
 " Racer configs
 let g:racer_cmd = "$HOME/.cargo/bin/racer"
@@ -232,12 +300,29 @@ let g:ctrlp_custom_ignore = {
       \ 'dir': '\v(venv|__pycache__)',
       \ }
 
+" Org mode
+let g:org_export_emacs = "/usr/local/bin/emacs"
+
+" Pretty unicode haskell symbols
+let g:haskell_conceal_wide = 1
+let g:haskell_conceal_enumerations = 1
+let hscoptions="𝐒𝐓𝐄𝐌xRtB𝔻w"
+
+" Easy align
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
+
+" Vim Session
+let g:session_autoload="no"
+
 " ============= Key mappings =====================
 
 " Leader commands
 noremap <leader><Tab> <C-^> " Go to last buffer
 nnoremap <leader>tt :TagbarToggle<CR>
 nnoremap <leader>fv :e $MYVIMRC<CR>
+" Fix weird double escape bug
+inoremap <expr> <Esc>      pumvisible() ? "\<C-e>" : "\<Esc>"
 
 " Fugitive bindings
 nnoremap <leader>gs :Gstatus<CR>
@@ -268,7 +353,7 @@ nnoremap <leader>bj :bn<CR>
 nnoremap <leader>bk :bp<CR>
 nnoremap <leader>bl :bnext<CR>
 nnoremap <leader>bh :bprevious<CR>
-nnoremap <leader>bd :bdelete<CR>
+nnoremap <leader>bd :Bdelete<CR>
 
 " File commands
 nnoremap <leader>ff :CtrlP<CR>
@@ -277,6 +362,7 @@ nnoremap <leader>fs :w<CR>
 nnoremap <leader>fu :GundoToggle<CR>
 nnoremap <leader>fj :e .<CR>
 nnoremap <leader>fJ :JunkfileOpen<CR>
+nnoremap <leader>fe :e <C-R>=expand("%:p:h") . "/" <CR>
 
 " Buffer commands
 nnoremap <leader>bb :CtrlPBuffer<CR>
