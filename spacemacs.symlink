@@ -23,42 +23,44 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     auto-completion
+     (auto-completion :variables
+                      auto-completion-enable-snippets-in-popup t)
      better-defaults
      (c-c++ :variables
             c-c++-enable-clang-support t)
-     clojure
-     colors
-     dash
+     ;; clojure
+     ;; colors
      emacs-lisp
      ;; emoji
-     erc
+     ;; erc
      eyebrowse
      git
      github
      ;; go
-     gtags
-     haskell
-     html
-     javascript
+     ;; gtags
+     (haskell :variables
+              haskell-process-type 'stack-ghci)
+     ;; html
+     ;; javascript
      latex
      markdown
      org
      osx
-     python
-     racket
-     rust
-     scala
+     ;; python
+     ;; racket
+     ;; rust
+     ;; scala
      search-engine
      (shell :variables
             shell-default-height 30
             shell-default-position 'full
-            shell-default-shell 'multiterm
+            shell-default-shell 'eshell
             shell-default-term-shell "/bin/zsh")
      ;; spacemacs-layouts
      ; spell-checking
      syntax-checking
      themes-megapack
+     vinegar
      (wakatime :variables
                wakatime-python-bin "/usr/local/bin/python3"
                wakatime-api-key "9563f795-832d-4a50-bb56-c3fb355aeba1"
@@ -108,7 +110,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(twilight-anti-bright
+   dotspacemacs-themes '(twilight
+                         twilight-anti-bright
                          monochrome
                          spacemacs-dark
                          solarized-dark
@@ -209,7 +212,7 @@ values."
    dotspacemacs-highlight-delimiters 'all
    ;; If non nil advises quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server nil
+   dotspacemacs-persistent-server t
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
@@ -225,10 +228,14 @@ values."
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
   (setq-default
+   ;; Git
    git-magit-status-fullscreen t
 
    ;; Rust autocompletion
    rust-enable-racer t
+
+   ;; Restore layouts
+   dotspacemacs-auto-resume-layouts t
    )
 
   ;; Ansi colors in comint buffers
@@ -243,7 +250,7 @@ user code."
   (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
   )
 
-(defun dotspacemacs/user-config ()
+ (defun dotspacemacs/user-config ()
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
@@ -286,6 +293,7 @@ layers configuration. You are free to put any user code."
 
    ;; Python
    anaconda-mode-server-script "/usr/local/lib/python3.5/site-packages/anaconda_mode.py"
+   python-shell-interpreter "python3"
    )
 
   ;; Always be in C++11 mode
@@ -301,6 +309,8 @@ layers configuration. You are free to put any user code."
   ;; YCMD
   (set-variable 'ycmd-server-command '("/usr/local/bin/python" "~/repos/ycmd/ycmd/"))
 
+  ;; Disable completion
+  (spacemacs/toggle-auto-completion-off)
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -310,8 +320,7 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(paradox-github-token t)
- '(python-shell-interpreter "python3"))
+ '(paradox-github-token t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

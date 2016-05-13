@@ -141,6 +141,7 @@ NeoBundle 'Shougo/vimproc.vim', {
 NeoBundle 'Shougo/vimshell.vim'
 
 " Etc
+NeoBundle 'tpope/vim-sensible'
 NeoBundle 'ctrlpvim/ctrlp.vim'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'tpope/vim-surround'
@@ -164,6 +165,7 @@ NeoBundle 'vim-scripts/YankRing.vim'
 NeoBundle 'ryanoasis/vim-devicons'
 NeoBundle 'mhinz/vim-startify'
 NeoBundle 'wellle/targets.vim'
+NeoBundle 'tpope/vim-endwise'
 
 " Python
 NeoBundle 'klen/python-mode'
@@ -195,6 +197,9 @@ NeoBundle 'pangloss/vim-javascript'
 
 " Web
 NeoBundle 'mattn/emmet-vim'
+
+" Scala
+NeoBundle 'derekwyatt/vim-scala'
 
 " Org mode
 NeoBundle 'jceb/vim-orgmode', {'depends':
@@ -321,8 +326,7 @@ let g:session_autoload="no"
 noremap <leader><Tab> <C-^> " Go to last buffer
 nnoremap <leader>tt :TagbarToggle<CR>
 nnoremap <leader>fv :e $MYVIMRC<CR>
-" Fix weird double escape bug
-inoremap <expr> <Esc>      pumvisible() ? "\<C-e>" : "\<Esc>"
+nnoremap <leader>. :lcd %:p:h<CR>:pwd<CR>
 
 " Fugitive bindings
 nnoremap <leader>gs :Gstatus<CR>
