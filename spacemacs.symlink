@@ -1,6 +1,4 @@
 ;; -*- mode: emacs-lisp -*-
-;; This file is loaded by Spacemacs at startup.
-;; It must be stored in your home directory.
 
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
@@ -24,55 +22,42 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      (auto-completion :variables
+                      auto-completion-return-key-behavior 'complete
+                      auto-completion-tab-key-behavior 'cycle
                       auto-completion-enable-snippets-in-popup t)
      better-defaults
      (c-c++ :variables
             c-c++-enable-clang-support t)
-     ;; clojure
-     ;; colors
+     clojure
      emacs-lisp
-     ;; emoji
-     ;; erc
-     eyebrowse
      git
      github
-     ;; go
-     ;; gtags
+     go
      (haskell :variables
               haskell-process-type 'stack-ghci)
-     ;; html
-     ;; javascript
+     ibuffer
+     ivy
      latex
      markdown
-     org
+     (org :variables
+          org-enable-reveal-js-support t)
      osx
-     ;; python
-     ;; racket
-     ;; rust
-     ;; scala
+     rust
+     scala
      search-engine
      (shell :variables
             shell-default-height 30
-            shell-default-position 'full
-            shell-default-shell 'eshell
+            shell-default-position 'bottom
+            shell-default-shell 'multi-term
             shell-default-term-shell "/bin/zsh")
-     ;; spacemacs-layouts
-     ; spell-checking
      syntax-checking
      themes-megapack
-     vinegar
-     (wakatime :variables
-               wakatime-python-bin "/usr/local/bin/python3"
-               wakatime-api-key "9563f795-832d-4a50-bb56-c3fb355aeba1"
-               wakatime-cli-path "/usr/local/bin/wakatime")
-     ;; vim-powerline
-     ;; xkcd
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(org-journal)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -86,14 +71,12 @@ This function is called at the very startup of Spacemacs initialization
 before layers configuration.
 You should not put any user code in there besides modifying the variable
 values."
-  ;; This setq-default sexp is an exhaustive list of all the supported
-  ;; spacemacs settings.
   (setq-default
    ;; One of `vim', `emacs' or `hybrid'. Evil is always enabled but if the
    ;; variable is `emacs' then the `holy-mode' is enabled at startup. `hybrid'
    ;; uses emacs key bindings for vim's insert mode, but otherwise leaves evil
    ;; unchanged. (default 'vim)
-   dotspacemacs-editing-style 'vim
+   dotspacemacs-editing-style 'emacs
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
@@ -102,7 +85,7 @@ values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner 'random
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'.
    ;; (default '(recents projects))
@@ -110,15 +93,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(twilight
-                         twilight-anti-bright
-                         monochrome
-                         spacemacs-dark
-                         solarized-dark
-                         spacemacs-light
-                         solarized-light
-                         leuven
-                         monokai
+   dotspacemacs-themes '(gruvbox
+                         twilight
                          zenburn)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -181,7 +157,7 @@ values."
    dotspacemacs-loading-progress-bar t
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup t
+   dotspacemacs-fullscreen-at-startup nil
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
    dotspacemacs-fullscreen-use-non-native nil
@@ -212,7 +188,7 @@ values."
    dotspacemacs-highlight-delimiters 'all
    ;; If non nil advises quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server t
+   dotspacemacs-persistent-server nil
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
@@ -234,8 +210,8 @@ user code."
    ;; Rust autocompletion
    rust-enable-racer t
 
-   ;; Restore layouts
-   dotspacemacs-auto-resume-layouts t
+   ;; Set journal directory
+   org-journal-dir "~/Dropbox/journal"
    )
 
   ;; Ansi colors in comint buffers
@@ -278,7 +254,6 @@ layers configuration. You are free to put any user code."
    ;; Org configuration
    org-directory "~/Dropbox/notes/"
    org-agenda-files '("~/Dropbox/notes/")
-   org-default-notes-file (concat org-directory "/notes.org")
 
    ;; Magit
    magit-repository-directories '("~/repos/")
@@ -296,35 +271,25 @@ layers configuration. You are free to put any user code."
    python-shell-interpreter "python3"
    )
 
+  ;; Load custom file
+  (setq custom-file "~/.emacs.d/private/local/custom.el")
+  (load-file custom-file)
+
   ;; Always be in C++11 mode
   (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++11")))
   (add-hook 'c-mode-hook (lambda () (setq flycheck-clang-language-standard "c99")))
-
-  ;; Add flycheck checker rerun binding
-  (spacemacs/set-leader-keys "er" 'flycheck-buffer)
-
-  ;; Web mode go to previous element
-  (spacemacs/set-leader-keys-for-major-mode 'web-mode "gS" 'web-mode-element-sibling-previous)
-
-  ;; YCMD
-  (set-variable 'ycmd-server-command '("/usr/local/bin/python" "~/repos/ycmd/ycmd/"))
-
-  ;; Disable completion
-  (spacemacs/toggle-auto-completion-off)
 )
-
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(paradox-github-token t))
+ '(package-selected-packages
+   (quote
+    (ox-reveal ibuffer-projectile zonokai-theme zenburn-theme zen-and-art-theme xterm-color ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toml-mode toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stekene-theme spacemacs-theme spaceline spacegray-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smex smeargle shell-pop seti-theme reverse-theme reveal-in-osx-finder restart-emacs request rainbow-delimiters railscasts-theme racer quelpa purple-haze-theme professional-theme popwin planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme persp-mode pcre2el pbcopy pastels-on-dark-theme paradox osx-trash osx-dictionary orgit organic-green-theme org-projectile org-present org-pomodoro org-plus-contrib org-journal org-download org-bullets open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noflet noctilux-theme niflheim-theme neotree naquadah-theme mwim mustang-theme multi-term move-text monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme material-theme markdown-toc majapahit-theme magit-gitflow magit-gh-pulls macrostep lush-theme lorem-ipsum linum-relative link-hint light-soap-theme launchctl jbeans-theme jazz-theme ivy-hydra ir-black-theme intero inkpot-theme info+ indent-guide ido-vertical-mode hungry-delete htmlize hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation hide-comnt heroku-theme hemisu-theme help-fns+ helm-make hc-zenburn-theme haskell-snippets gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme google-translate golden-ratio go-guru go-eldoc gnuplot gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gist gh-md gandalf-theme flycheck-rust flycheck-pos-tip flycheck-haskell flx-ido flatui-theme flatland-theme firebelly-theme fill-column-indicator farmhouse-theme fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu espresso-theme eshell-z eshell-prompt-extras esh-help ensime engine-mode elisp-slime-nav dumb-jump dracula-theme django-theme disaster darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme counsel-projectile company-statistics company-go company-ghci company-ghc company-cabal company-c-headers company-auctex column-enforce-mode colorsarenice-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized cmm-mode cmake-mode clues-theme clojure-snippets clj-refactor clean-aindent-mode clang-format cider-eval-sexp-fu cherry-blossom-theme cargo busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme auto-yasnippet auto-highlight-symbol auto-compile auctex-latexmk apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme adaptive-wrap ace-window ace-link ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
+ )

@@ -6,30 +6,15 @@ antigen use oh-my-zsh
 
 # Bundles from the default repo (robbyrussell's oh-my-zsh).
 antigen bundle git
-antigen bundle pip
-antigen bundle lein
 antigen bundle command-not-found
 antigen bundle colored-man-pages
 antigen bundle colorize
-antigen bundle copydir
-antigen bundle copyfile
-antigen bundle extract
-antigen bundle gitignore
 
 # Syntax highlighting bundle.
-antigen bundle zsh-users/zsh-syntax-highlighting
+# antigen bundle zsh-users/zsh-syntax-highlighting
 
 # Load the theme.
 antigen theme https://gist.github.com/hallfox/ef3323aa675e7f4b6bdf westwood
 
 # Tell antigen that you're done.
 antigen apply
-
-alias leakcheck="iprofiler -leaks -d $HOME/.leakchecks"
-
-# Activate pyenv shim magic
-# eval "$(pyenv init -)"
-# eval "$(pyenv virtualenv-init -)"
-
-# Activate rbenv shim magic
-# eval "$(rbenv init -)"

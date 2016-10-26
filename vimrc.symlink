@@ -1,406 +1,71 @@
-" Use Vim settings, rather then Vi settings (much better!).
-" This must be first, because it changes other options as a side effect.
-set nocompatible
+" -*- mode: vimrc -*-
+"vim: ft=vim
 
-" ================ General Config ====================
+" dotspacevim/auto-install {{{
+" Automatic installation of spacevim.
 
-set showcmd                     "Show incomplete cmds down the bottom
-set showmode                    "Show current mode down the bottom
-set visualbell                  "No sounds
-set autoread                    "Reload files changed outside vim
-set nonumber
-set encoding=utf8
-
-" This makes vim act like all other editors, buffers can
-" exist in the background without being in a window.
-" http://items.sjbach.com/319/configuring-vim-right
-set hidden
-set backspace=2
-
-"turn on syntax highlighting
-syntax on
-
-" Reload vimrc on save
-autocmd! BufWritePost .vimrc source %
-
-" Change leader to a comma because the backslash is too far away
-" That means all \x commands turn into ,x
-" The mapleader has to be set before vundle starts loading all 
-" the plugins.
-let mapleader="\<Space>"
-
-" ================ Turn Off Swap Files ==============
-
-set noswapfile
-set nobackup
-set nowb
-
-" ================ Persistent Undo ==================
-" Keep undo history across sessions, by storing in file.
-" Only works all the time.
-if has('persistent_undo') && !isdirectory(expand('~').'/.vim/backups')
-  silent !mkdir ~/.vim/backups > /dev/null 2>&1
-  set undodir=~/.vim/backups
-  set undofile
+if empty(glob('~/.vim/autoload/spacevim.vim'))
+    silent !curl -fLo ~/.vim/autoload/spacevim.vim --create-dirs
+          \ https://raw.githubusercontent.com/ctjhoa/spacevim/master/autoload/spacevim.vim
 endif
 
-" ================ Indentation ======================
-
-set autoindent
-set smartindent
-set smarttab
-set shiftwidth=2
-set softtabstop=2
-set tabstop=2
-set expandtab
-
-" Auto indent pasted text
-nnoremap p p=`]<C-o>
-nnoremap P P=`]<C-o>
-
-" Display tabs and trailing spaces visually
-set list listchars=tab:\ \ ,trail:·
-
-set nowrap       "Don't wrap lines
-set linebreak    "Wrap lines at convenient points
-
-" ================ Folds ============================
-
-set foldmethod=indent   "fold based on indent
-set foldnestmax=3       "deepest fold is 3 levels
-set nofoldenable        "dont fold by default
-
-" ================ Completion =======================
-
-set wildmode=list:longest
-set wildmenu                "enable ctrl-n and ctrl-p to scroll thru matches
-set wildignore=*.o,*.obj,*~ "stuff to ignore when tab completing
-set wildignore+=*vim/backups*
-set wildignore+=tmp/**
-set wildignore+=*.png,*.jpg,*.gif
-
-"
-" ================ Scrolling ========================
-
-set scrolloff=8         "Start scrolling when we're 8 lines away from margins
-set sidescrolloff=15
-set sidescroll=1
-
-" ================ Search ===========================
-
-set incsearch       " Find the next match as we type the search
-set hlsearch        " Highlight searches by default
-set ignorecase      " Ignore case when searching...
-set smartcase       " ...unless we type a capital
-
-" ================ Functions ========================
-
-if !exists('*s:setupWrapping')
-  function s:setupWrapping()
-    set wrap
-    set wm=2
-    set textwidth=79
-  endfunction
-endif
-
-"" txt
-augroup vimrc-wrapping
-  autocmd!
-  autocmd BufRead,BufNewFile *.txt call s:setupWrapping()
-augroup END
-
-" ================ gvim Settings ====================
-
-if has('gui_running')
-  set guioptions-=m " get rid of annoying graphical elements
-  set guioptions-=T
-  set guioptions-=r
-  set guioptions-=L
-  set guifont=Inconsolata\ for\ Powerline:h14
-end
-
-" ================ NeoBundle Plugins ================
-
-set runtimepath^=~/.vim/bundle/neobundle.vim/
-
-call neobundle#begin(expand('~/.vim/bundle/'))
-
-" Let NeoBundle manage NeoBundle
-NeoBundleFetch 'Shougo/neobundle.vim'
-
-" Shell and async extensions
-NeoBundle 'Shougo/vimproc.vim', {
-      \ 'build' : {
-      \   'windows' : 'tools\\update-dll-mingw',
-      \   'cygwin' : 'make -f make_cygwin.mak',
-      \   'mac' : 'make',
-      \   'linux' : 'make',
-      \   'unix' : 'gmake',
-      \ },
-      \ }
-NeoBundle 'Shougo/vimshell.vim'
-
-" Etc
-NeoBundle 'tpope/vim-sensible'
-NeoBundle 'ctrlpvim/ctrlp.vim'
-NeoBundle 'scrooloose/syntastic'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'easymotion/vim-easymotion'
-NeoBundle 'bling/vim-bufferline'
-NeoBundle 'majutsushi/tagbar'
-NeoBundle 'moll/vim-bbye'
-NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'wakatime/vim-wakatime'
-NeoBundle 'sjl/gundo.vim'
-NeoBundle 'Shougo/junkfile.vim'
-NeoBundle 'chrisbra/NrrwRgn'
-NeoBundle 'tpope/vim-dispatch'
-NeoBundle 'christoomey/vim-tmux-navigator'
-NeoBundle 'edkolev/tmuxline.vim'
-NeoBundle 'xolox/vim-session', {'depends': ['xolox/vim-misc'] }
-NeoBundle 'jiangmiao/auto-pairs'
-NeoBundle 'junegunn/vim-easy-align'
-NeoBundle 'tpope/vim-eunuch'
-NeoBundle 'vim-scripts/YankRing.vim'
-NeoBundle 'ryanoasis/vim-devicons'
-NeoBundle 'mhinz/vim-startify'
-NeoBundle 'wellle/targets.vim'
-NeoBundle 'tpope/vim-endwise'
-
-" Python
-NeoBundle 'klen/python-mode'
-NeoBundle 'Glench/Vim-Jinja2-Syntax'
-NeoBundle 'jmcantrell/vim-virtualenv'
-
-" Rust
-NeoBundle 'rust-lang/rust.vim'
-NeoBundle 'racer-rust/vim-racer'
-NeoBundle 'timonv/vim-cargo'
-
-" Golang
-NeoBundle 'fatih/vim-go'
-
-" Clojure
-NeoBundle 'tpope/vim-fireplace'
-NeoBundle 'tpope/vim-salve'
-
-" Haskell
-NeoBundle 'neovimhaskell/haskell-vim'
-NeoBundle 'enomsg/vim-haskellConcealPlus'
-NeoBundle 'eagletmt/ghcmod-vim'
-NeoBundle 'eagletmt/neco-ghc'
-NeoBundle 'Twinside/vim-hoogle'
-NeoBundle 'mpickering/hlint-refactor-vim'
-
-" Node
-NeoBundle 'pangloss/vim-javascript'
-
-" Web
-NeoBundle 'mattn/emmet-vim'
-
-" Scala
-NeoBundle 'derekwyatt/vim-scala'
-
-" Org mode
-NeoBundle 'jceb/vim-orgmode', {'depends':
-      \ ['vim-scripts/utl.vim',
-      \  'tpope/vim-repeat',
-      \  'tpope/vim-speeddating',
-      \  'chrisbra/NrrwRgn',
-      \  'mattn/calendar-vim',
-      \  'vim-scripts/SyntaxRange'] }
-
-NeoBundle 'rking/ag.vim'
-
-" Unite.vim
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/neomru.vim'
-
-" Git related extensions
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'mattn/gist-vim', {'depends': 'mattn/webapi-vim'}
-
-" Colorscheme plugins
-NeoBundle 'flazz/vim-colorschemes'
-"NeoBundle 'atelierbram/vim-colors_duotones'
-
-if has('nvim')
-  NeoBundle 'Shougo/deoplete.nvim'
-  NeoBundle 'Shougo/neosnippet.vim'
-else
-  " UltiSnips
-  NeoBundle 'SirVer/ultisnips'
-  NeoBundle 'honza/vim-snippets'
-
-  " You Complete Me
-  NeoBundle 'Valloric/YouCompleteMe'
-endif
-
-" Vim Airline
-NeoBundle 'vim-airline/vim-airline'
-NeoBundle 'vim-airline/vim-airline-themes'
-
-" Devicons loads last to be compatible with other plugins
-NeoBundle 'ryanoasis/vim-devicons'
-
-call neobundle#end()
-
-filetype plugin indent on
-
-NeoBundleCheck
-
-" ============== Plugin settings =================
-
-" Bufferline
-let g:bufferline_echo = 0 " Turn off bufferline in cmd bar
-
-" Airline fonts
-set laststatus=2
-let g:airline_powerline_fonts = 1
-
-" Themeing
-set background=dark
-colorscheme twilight256
-
-if has('gui_running')
-  colorscheme twilight
-end
-
-" You Complete Me
-let g:ycm_show_diagnostics_ui = 0
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_path_to_python_interpreter = "/usr/local/bin/python2"
-let g:ycm_global_ycm_extra_conf = "~/.ycm_extra_conf.py"
-let g:ycm_extra_conf_globlist = ["~/.ycm_extra_conf.py"]
-
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  "return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-  " For no inserting <CR> key.
-  return pumvisible() ? "\<C-y>" : "\<CR>"
-endfunction
-
-" Ultisnips
-let g:UltiSnipsExpandTrigger = "<C-\Space>"
-
-" Unite.vim
-" call unite#filters#matcher_default#use(['matcher_fuzzy'])
-
-" Syntastic
-let g:syntastic_cpp_compiler = "clang++"
-let g:syntastic_cpp_compiler_options = "-std=c++11"
-let g:syntastic_check_on_open= 1
-let g:syntastic_mode_map = {
-      \ "mode": "active",
-      \ "active_filetypes": [],
-      \ "passive_filetypes": ["python"] }
-
-" Racer configs
-let g:racer_cmd = "$HOME/.cargo/bin/racer"
-let $RUST_SRC_PATH = "$HOME/repos/rust/src"
-
-" CtrlP
-let g:ctrlp_custom_ignore = {
-      \ 'dir': '\v(venv|__pycache__)',
-      \ }
-
-" Org mode
-let g:org_export_emacs = "/usr/local/bin/emacs"
-
-" Pretty unicode haskell symbols
-let g:haskell_conceal_wide = 1
-let g:haskell_conceal_enumerations = 1
-let hscoptions="𝐒𝐓𝐄𝐌xRtB𝔻w"
-
-" Easy align
-xmap ga <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
-
-" Vim Session
-let g:session_autoload="no"
-
-" ============= Key mappings =====================
-
-" Leader commands
-noremap <leader><Tab> <C-^> " Go to last buffer
-nnoremap <leader>tt :TagbarToggle<CR>
-nnoremap <leader>fv :e $MYVIMRC<CR>
-nnoremap <leader>. :lcd %:p:h<CR>:pwd<CR>
-
-" Fugitive bindings
-nnoremap <leader>gs :Gstatus<CR>
-nnoremap <leader>gw :Gwrite<CR>
-nnoremap <leader>gc :Gcommit<CR>
-nnoremap <leader>gp :Gpush<CR>
-nnoremap <leader>gf :Gpull<CR>
-nnoremap <leader>gd :Gdiff<CR>
-
-" Window commands
-nnoremap <leader>wc <C-w>c
-nnoremap <leader>ws <C-w>s
-nnoremap <leader>wv <C-w>v
-nnoremap <leader>w= <C-w>=
-" Close preview window
-nnoremap ^G :pc<CR>
-" Close quickfix window
-nnoremap <leader>wq :ccl<CR>
-" Window jumping
-nnoremap <leader>wh <C-w>h
-nnoremap <leader>wj <C-w>j
-nnoremap <leader>wk <C-w>k
-nnoremap <leader>wl <C-w>l
-
-" Buffer commands
-nnoremap <leader>bb :CtrlPBuffer<CR>
-nnoremap <leader>bj :bn<CR>
-nnoremap <leader>bk :bp<CR>
-nnoremap <leader>bl :bnext<CR>
-nnoremap <leader>bh :bprevious<CR>
-nnoremap <leader>bd :Bdelete<CR>
-
-" File commands
-nnoremap <leader>ff :CtrlP<CR>
-nnoremap <leader>fr :CtrlPMRU<CR>
-nnoremap <leader>fs :w<CR>
-nnoremap <leader>fu :GundoToggle<CR>
-nnoremap <leader>fj :e .<CR>
-nnoremap <leader>fJ :JunkfileOpen<CR>
-nnoremap <leader>fe :e <C-R>=expand("%:p:h") . "/" <CR>
-
-" Buffer commands
-nnoremap <leader>bb :CtrlPBuffer<CR>
-nnoremap <leader>k :bn<CR>
-nnoremap <leader>j :bp<CR>
-
-" Tab commands
-nnoremap <leader>l :tabn<CR>
-nnoremap <leader>h :tabp<CR>
-
-" UltiSnips
-nnoremap <leader>ul <C-Tab>
-
-" System clipboard
-vnoremap <leader>xy "*y
-nnoremap <leader>xy "*yy
-nnoremap <leader>xp "*p
-nnoremap <leader>xP "*P
-
-" Quit
-nnoremap <leader>qq :qa<CR>
-vnoremap <leader>qq :qa<CR>
-nnoremap <leader>qQ :qa!<CR>
-vnoremap <leader>qQ :qa!<CR>
-
-" Syntastic
-nnoremap <leader>ts :SyntasticToggleMode<CR>
-nnoremap <leader>ee :SyntasticCheck<CR>
-
-" VimShell
-nnoremap <leader>' :VimShellPop<CR>
-
-" Searching
-nnoremap <leader>ss :Ag 
-nnoremap <leader>sc :noh<CR>
-nnoremap <leader>sb :AgBuffer 
-nnoremap <leader>sf :AgFile 
+" }}}
+
+" dotspacevim/init {{{
+" This code is called at the very startup of Spacevim initialization
+" before layers configuration.
+" You should not put any user code in there besides modifying the variable
+" values."
+" IMPORTANT: For the moment, any changes in plugins or layers needs
+" a vim restart and :PlugInstall
+
+  let g:dotspacevim_distribution_mode = 1
+
+  let g:dotspacevim_configuration_layers = [
+  \  'core/.*',
+  \  'git',
+  \  'syntax-checking'
+  \]
+
+  let g:dotspacevim_additional_plugins = ['morhetz/gruvbox']
+
+  let g:dotspacevim_excluded_plugins = []
+
+  let g:dotspacevim_escape_key_sequence = 'fj'
+
+" }}}
+
+" dotspacevim/user-init {{{
+" Initialization for user code.
+" It is compute immediately after `dotspacemacs/init', before layer
+" configuration executes.
+" This function is mostly useful for variables that need to be set
+" before plugins are loaded. If you are unsure, you should try in setting
+" them in `dotspacevim/user-config' first."
+
+  let mapleader = ' '
+  let g:leaderGuide_vertical = 1
+
+" }}}
+
+call spacevim#bootstrap()
+
+" dotspacevim/user-config {{{
+" Configuration for user code.
+" This is computed at the very end of Spacevim initialization after
+" layers configuration.
+" This is the place where most of your configurations should be done.
+" Unless it is explicitly specified that
+" a variable should be set before a plugin is loaded,
+" you should place your code here."
+
+  set background=dark
+  colorscheme gruvbox
+  if has("gui_running")
+	  set guioptions-=r
+	  set guioptions-=R
+  endif
+
+" }}}
+
+

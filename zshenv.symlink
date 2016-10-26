@@ -9,11 +9,7 @@ export MANPATH="/usr/local/man:$MANPATH"
 export REPOS="$HOME/repos"
 
 # Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-    export EDITOR='emacsclient -t'
-else
-    export EDITOR='emacsclient -c'
-fi
+export EDITOR="vim"
 
 # Compilation flags
 export ARCHFLAGS="-arch x86_64"
@@ -33,3 +29,6 @@ export PATH=$PATH:/usr/local/texlive/2015/bin/x86_64-darwin/
 
 # Haskell package path
 export PATH=$PATH:$HOME/.local/bin
+
+# Activate autoenv
+source /usr/local/opt/autoenv/activate.sh
